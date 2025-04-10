@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMORA|AROMA</title>
+  <link rel="icon" type="image/x-icon" href="Dark_Logo.png" sizes="32x32">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1c1c1c;
+      color: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .hero {
+	  background: url('https://images.unsplash.com/photo-1580476262793-51fdbb40b9fd?grayscale') no-repeat center center/cover;
+      height: 300px;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .product-card {
+      background: #333;
+      border: 1px solid #f4f4f4;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    }
+    body.dark-mode .product-card {
+      background: #333;
+      color: #f4f4f4;
+      border-color: #f4f4f4;
+    }
+    body:not(.dark-mode) .product-card {
+      background: #ffffff;
+      color: #000000;
+      border-color: #000000;
+    }
+
+    footer {
+      background-color: #f4f4f4;
+      color: #000000;
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .form-control, .btn {
+      border-radius: 5px;
+    }
+    .btn-primary {
+      background-color: #000000;
+      color: #f4f4f4;
+      border: none;
+    }
+    .navbar {
+      padding: 3px 0;
+      z-index: 1060;
+	  position: relative;
+    }
+	.navbar.sticky-top {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	z-index: 1070; /* Higher than other elements */
+	width: 100%;
+	}
+    .navbar-light .navbar-nav .nav-link {
+      color: #000000;
+    }
+    .navbar-light .navbar-brand {
+      color: #000000;
+    }
+    .navbar-brand .logo {
+      max-width: 40px;
+    }
+    .navbar-toggler .toggler-icon {
+      height: 30px;
+    }
+    
+    body, .product-card, .hero, footer {
+      transition: all 0.3s ease;
+    }
+    
+    .navbar, .nav-link, .navbar-brand {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    html {
+      overflow-y: scroll;
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    
+    .navbar-actions {
+      display: flex;
+      align-items: center;
+    }
+    
+    .cart-wrapper {
+      position: relative;
+      margin-left: 10px;
+    }
+    
+    .side-cart {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background-color: #fff;
+      z-index: 1070;
+      transition: right 0.3s ease;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+      overflow-y: auto;
+      color: #000;
+    }
+    
+    .side-cart.active {
+      right: 0;
+    }
+    
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .cart-body {
+      padding: 20px;
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+    }
+    
+    .cart-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 20px;
+      background: #fff;
+      border-top: 1px solid #eee;
+    }
+    
+    .cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1065;
+      display: none;
+    }
+    
+    .cart-overlay.active {
+      display: block;
+    }
+    
+    .cart-product {
+      display: flex;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .cart-product-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    
+    .cart-product-details {
+      flex: 1;
+    }
+    
+    .cart-quantity {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      cursor: pointer;
+    }
+    
+    .qty-input {
+      width: 40px;
+      height: 30px;
+      text-align: center;
+      border: 1px solid #ddd;
+      margin: 0 5px;
+    }
+    
+    .cart-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .close-cart {
+      cursor: pointer;
+      font-size: 24px;
+    }
+    
+    .product-card {
+      position: relative;
+      text-align: center;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .product-image {
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    
+    .product-title {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    
+    .product-price {
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .product-actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .product-card:hover .product-actions {
+      opacity: 1;
+    }
+    
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .action-icon:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+    
+    .product-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1080;
+      overflow-y: auto;
+    }
+    
+    .product-modal-content {
+      background-color: #fff;
+      max-width: 900px;
+      margin: 50px auto;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    
+    .product-modal-body {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .product-modal-image {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .product-modal-image img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    .product-modal-details {
+      flex: 1;
+      padding: 30px;
+      color: #333;
+    }
+    
+    .product-modal-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .product-modal-price {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .product-modal-description {
+      margin-bottom: 20px;
+      color: #666;
+    }
+    
+    .product-quantity {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+      z-index: 1;
+    }
+    
+    body.dark-mode .product-modal-content {
+      background-color: #333;
+      color: #f4f4f4;
+    }
+    
+    body.dark-mode .product-modal-title,
+    body.dark-mode .product-modal-price,
+    body.dark-mode .close-modal {
+      color: #f4f4f4;
+    }
+    
+    body.dark-mode .product-modal-description {
+      color: #ccc;
+    }
+    
+    @media (max-width: 768px) {
+      .product-modal-body {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .side-cart {
+        width: 100%;
+        right: -100%;
+      }
+    }
+	
+	.about-card {
+    border-radius: 10px;
+    padding: 25px;
+    transition: all 0.3s ease;
+  }
+  
+  body.dark-mode .about-card {
+    background: #333;
+    border: 1px solid #444;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  
+  body:not(.dark-mode) .about-card {
+    background: #ffffff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .hero {
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+	z-index: 1050;
+  }
+
+  .hero-content {
+    z-index: 10;
+    padding: 20px;
+    max-width: 800px;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+
+  .moon-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1580476262793-51fdbb40b9fd?grayscale') no-repeat center center/cover;
+    color: white;
+  }
+
+  .moon-hero::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 70%, rgba(255,255,255,0) 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Sun-themed light hero */
+  .sun-hero {
+    background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.3)), url('https://images.unsplash.com/photo-1530143584546-22a111be4fc6?grayscale') no-repeat center center/cover;
+    color: #333;
+  }
+
+  .sun-hero::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 50px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255,165,0,0.8) 0%, rgba(255,165,0,0.2) 70%, rgba(255,165,0,0) 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(255, 165, 0, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+
+    .moon-hero::before,
+    .sun-hero::before {
+      width: 60px;
+      height: 60px;
+      right: 30px;
+    }
+  }
+  
+	.navbar-light .navbar-nav .nav-link,
+	.navbar-light .nav-link {
+	color: #000000 !important;
+	}
+
+	.navbar-dark .navbar-nav .nav-link,
+	.navbar-dark .nav-link {
+	color: #ffffff !important;
+	}
+	
+  </style>
+</head>
+<body class="dark-mode">
+
+  <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #ffffff;">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        <img src="Light_Logo.png" alt="AMORA|AROMA Logo" class="logo">
+      </a>
+      
+      <div class="navbar-actions d-flex d-lg-none">
+        <div class="cart-wrapper">
+          <a class="nav-link" href="#" id="cartIconMobile">
+            <i class="bi bi-cart-fill"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">0</span>
+          </a>
+        </div>
+        <button id="toggleThemeBtn" class="btn btn-outline-dark ms-2" title="Toggle Theme">
+          <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
+        </button>
+        <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+        
+        <div class="navbar-actions d-none d-lg-flex">
+          <div class="cart-wrapper">
+            <a class="nav-link" href="#" id="cartIconDesktop">
+              <i class="bi bi-cart-fill"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count">0</span>
+            </a>
+          </div>
+          <button id="toggleThemeBtnDesktop" class="btn btn-outline-dark ms-2" title="Toggle Theme">
+            <i id="themeIconDesktop" class="bi bi-moon-stars-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <section id="home">
+  <div class="hero moon-hero" style="display: block;">
+    <div class="hero-content">
+      <h1>AMORA|AROMA</h1>
+      <p class="hero-subtitle">SCENTED BY THE SUN, KISS BY THE MOON.</p>
+    </div>
+  </div>
+  
+  <div class="hero sun-hero" style="display: none;">
+    <div class="hero-content">
+      <h1>AMORA|AROMA</h1>
+      <p class="hero-subtitle">SCENTED BY THE SUN, KISS BY THE MOON.</p>
+    </div>
+  </div>
+  
+  <div class="text-center my-4 px-3">
+    <p>Welcome to AMORA|AROMA — where fragrance meets luxury.</p>
+  </div>
+</section>
+
+  <section id="about" class="container py-5">
+  <h2 class="text-center mb-4">About Us</h2>
+  
+
+  <div class="dark-theme-content" style="display: none;">
+    <div class="about-card mb-4">
+      <h4 class="mb-3 text-center">History of AMORA|AROMA</h4>
+      <p>Born from a deep fascination with the cosmos and a love for storytelling through scent, <strong>AMORA|AROMA</strong> was founded by the Amora family, whose name, when reflected, becomes <em>Aroma</em>—a perfect metaphor for the duality of beauty: what we see and what we feel. The brand was conceived under a starlit sky, where inspiration flowed from the moon's shifting phases and the mystery of the stars. Each fragrance is an olfactory poem, capturing a moment in the heavens—a reminder that just like celestial bodies, beauty comes in phases and light.</p>
+    </div>
+    
+    <div class="about-card mb-4">
+      <h4 class="mb-3 text-center">Mission Statement</h4>
+      <p>At <strong>AMORA|AROMA</strong>, our mission is to craft fragrances that transcend time and space—bottling the energy of the moon and the brilliance of the stars into every scent. We aim to ignite emotion, spark imagination, and awaken inner beauty through our cosmic-inspired perfumes.</p>
+    </div>
+    
+    <div class="about-card">
+      <h4 class="mb-3 text-center">Vision Statement</h4>
+      <p>We envision <strong>AMORA|AROMA</strong> as a guiding star in the fragrance industry—a brand where art, astronomy, and aroma converge. Our dream is to become a global symbol of elegance and wonder, inspiring people to connect with the universe within and around them, one celestial scent at a time.</p>
+    </div>
+  </div>
+  
+
+  <div class="light-theme-content">
+    <div class="about-card mb-4">
+      <h4 class="mb-3 text-center">Our Story</h4>
+      <p>Founded in 2020, <strong>AMORA|AROMA</strong> began as a pursuit of celestial harmony in scent. The interplay between our name—Amora becoming Aroma when mirrored—represents our philosophy that true beauty flows in both directions: what we perceive and what we experience. Our artisanal approach combines traditional perfumery with innovative techniques inspired by the stars and celestial bodies that guide us.</p>
+    </div>
+    
+    <div class="about-card mb-4">
+      <h4 class="mb-3 text-center">Our Commitment</h4>
+      <p>We believe in creating fragrances that tell a story—each bottle containing notes carefully selected to transport you to different realms of the cosmos. Using only the finest natural ingredients sourced from around the world, we ensure that every <strong>AMORA|AROMA</strong> creation is as unique as the individual wearing it.</p>
+    </div>
+    
+    <div class="about-card">
+      <h4 class="mb-3 text-center">Our Future</h4>
+      <p>As we continue to grow, <strong>AMORA|AROMA</strong> remains dedicated to pushing the boundaries of olfactory art. We're constantly exploring new scent combinations and environmental practices that honor both our planet and the vast universe that inspires us. Join us on this journey through the stars, one fragrance at a time.</p>
+    </div>
+  </div>
+</section>
+
+  <section id="products" class="container py-5">
+    <h2 class="text-center mb-4">Our Signature Scents</h2>
+    <div class="row g-4 justify-content-center" id="productCards">
+    </div>
+  </section>
+
+  <section id="contact" class="container py-5">
+    <h2 class="text-center mb-4">Contact Us</h2>
+    <form class="mx-auto" style="max-width: 600px;">
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Your Name" required />
+      </div>
+      <div class="mb-3">
+        <input type="email" class="form-control" placeholder="Your Email" required />
+      </div>
+      <div class="mb-3">
+        <textarea class="form-control" rows="5" placeholder="Your Message"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Send Message</button>
+    </form>
+    
+    <div class="text-center mt-4">
+      <p>Or reach us at:<br>
+      78 Sampaguita Street, Barangay San Jose, San Pablo City, Laguna 4000<br>
+      Phone: (049) 523-8741<br>
+      Email: hello@amoraaroma.com</p>
+    </div>
+  </section>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="side-cart" id="sideCart">
+    <div class="cart-header">
+      <h5>Shopping Cart</h5>
+      <span class="close-cart" id="closeCart">&times;</span>
+    </div>
+    <div class="cart-body" id="cartItems">
+    </div>
+    <div class="cart-footer">
+      <div class="d-flex justify-content-between mb-3">
+        <h5>Subtotal:</h5>
+        <h5>₱<span id="cartTotal">0.00</span></h5>
+      </div>
+      <a href="checkout.html" class="btn btn-success cart-btn" style="background-color:black; color:white; border-color: black">Checkout</a>
+    </div>
+  </div>
+
+  <div id="productModal" class="product-modal">
+    <div class="product-modal-content">
+      <span class="close-modal">&times;</span>
+      <div class="product-modal-body">
+        <div class="product-modal-image">
+          <img id="modalProductImage" src="" alt="Product Image">
+        </div>
+        <div class="product-modal-details">
+          <h2 id="modalProductTitle" class="product-modal-title"></h2>
+          <div id="modalProductPrice" class="product-modal-price"></div>
+          <p id="modalProductDescription" class="product-modal-description"></p>
+          
+          <div class="product-quantity">
+            <div class="qty-btn" onclick="updateModalQuantity(-1)">-</div>
+            <input type="text" id="modalQuantity" class="qty-input" value="1" readonly>
+            <div class="qty-btn" onclick="updateModalQuantity(1)">+</div>
+          </div>
+          
+          <button id="modalAddToCartBtn" class="btn btn-dark w-100">ADD TO CART</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 AMORA|AROMA. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+function applyProductDisplayStyle() {
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Product Card Specific Styles */
+    .product-card {
+      position: relative;
+      text-align: center;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .product-image {
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    
+    .product-title {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    
+    .product-price {
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .product-actions {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .product-card:hover .product-actions {
+      opacity: 1;
+    }
+    
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .action-icon:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+    
+    /* Quick View Modal Styles */
+    .product-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1080;
+      overflow-y: auto;
+    }
+    
+    .product-modal-content {
+      background-color: #fff;
+      max-width: 900px;
+      margin: 50px auto;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    
+    .product-modal-body {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .product-modal-image {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .product-modal-image img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    .product-modal-details {
+      flex: 1;
+      padding: 30px;
+      color: #333;
+    }
+    
+    .product-modal-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .product-modal-price {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .product-modal-description {
+      margin-bottom: 20px;
+      color: #666;
+    }
+    
+    .product-quantity {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      cursor: pointer;
+    }
+    
+    .qty-input {
+      width: 40px;
+      height: 30px;
+      text-align: center;
+      border: 1px solid #ddd;
+      margin: 0 5px;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+      z-index: 1;
+    }
+    
+    /* Dark Mode Adjustments */
+    body.dark-mode .product-modal-content {
+      background-color: #333;
+      color: #f4f4f4;
+    }
+    
+    body.dark-mode .product-modal-title,
+    body.dark-mode .product-modal-price,
+    body.dark-mode .close-modal {
+      color: #f4f4f4;
+    }
+    
+    body.dark-mode .product-modal-description {
+      color: #ccc;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .product-modal-body {
+        flex-direction: column;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+
+function showAddedToCartMessage(productName) {
+
+  const messageElement = document.createElement('div');
+  messageElement.style.position = 'fixed';
+  messageElement.style.bottom = '20px';
+  messageElement.style.right = '20px';
+  messageElement.style.backgroundColor = document.body.classList.contains('dark-mode') ? '#333' : '#f4f4f4';
+  messageElement.style.color = document.body.classList.contains('dark-mode') ? '#f4f4f4' : '#000';
+  messageElement.style.padding = '10px 20px';
+  messageElement.style.borderRadius = '5px';
+  messageElement.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+  messageElement.style.zIndex = '1100';
+  messageElement.textContent = `${productName} added to cart`;
+  
+
+  document.body.appendChild(messageElement);
+  
+
+  setTimeout(() => {
+    messageElement.style.opacity = '0';
+    messageElement.style.transition = 'opacity 0.5s ease';
+    setTimeout(() => document.body.removeChild(messageElement), 500);
+  }, 2000);
+}
+
+
+
+const toggleTheme = () => {
+  const dark = document.body.classList.contains("dark-mode");
+  document.body.classList.toggle("dark-mode");
+
+  const footer = document.querySelector("footer");
+  const navbar = document.getElementById("mainNavbar");
+  const moonHero = document.querySelector(".moon-hero");
+  const sunHero = document.querySelector(".sun-hero");
+  const logo = document.querySelector(".navbar-brand img");
+  const navLinks = document.querySelectorAll(".nav-link");
+  const brand = document.querySelector(".navbar-brand");
+  const sideCart = document.getElementById("sideCart");
+  const productModal = document.querySelector(".product-modal-content"); 
+
+  const themeButtons = [document.getElementById("toggleThemeBtn"), document.getElementById("toggleThemeBtnDesktop")];
+  const themeIcons = [document.getElementById("themeIcon"), document.getElementById("themeIconDesktop")];
+
+  if (!dark) {
+    // Switching to dark mode
+    document.body.style.backgroundColor = "#1c1c1c";
+    document.body.style.color = "#f4f4f4";
+    footer.style.backgroundColor = "#f4f4f4";
+    footer.style.color = "#000000";
+    
+    // Show moon hero, hide sun hero
+    moonHero.style.display = "flex";
+    sunHero.style.display = "none";
+    
+    // Preserve the sticky-top class while changing the navbar theme
+    navbar.classList.remove("navbar-dark");
+    navbar.classList.add("navbar-light");
+    navbar.style.backgroundColor = "#ffffff";
+    
+    // Explicitly set all nav links to black
+    navLinks.forEach(link => {
+      link.style.color = "#000000";
+    });
+    
+    brand.style.color = "#000000";
+
+    // Cart icons color
+    document.querySelectorAll("#cartIconMobile i, #cartIconDesktop i").forEach(icon => {
+      icon.style.color = "#000000";
+    });
+
+    // Set shopping cart styles
+    sideCart.style.backgroundColor = "#333";
+    sideCart.style.color = "#f4f4f4";
+    document.querySelector(".cart-header").style.borderBottom = "1px solid #444";
+    document.querySelector(".cart-footer").style.backgroundColor = "#333";
+    document.querySelector(".cart-footer").style.borderTop = "1px solid #444";
+    
+    document.querySelectorAll(".cart-product").forEach(item => {
+      item.style.borderBottom = "1px solid #444";
+    });
+
+    if (productModal) {
+      productModal.style.backgroundColor = "#333";
+      productModal.style.color = "#f4f4f4";
+      document.querySelector(".close-modal").style.color = "#f4f4f4";
+      document.querySelector(".product-modal-description").style.color = "#ccc";
+    }
+
+    logo.src = "Light_Logo.png";
+    themeButtons.forEach(btn => {
+      btn.classList.remove("btn-outline-light");
+      btn.classList.add("btn-outline-dark");
+    });
+    themeIcons.forEach(icon => icon.className = "bi bi-moon-stars-fill");
+  } else {
+    // Switching to light mode
+    document.body.style.backgroundColor = "#ffffff";
+    document.body.style.color = "#000000";
+    footer.style.backgroundColor = "#000000";
+    footer.style.color = "#ffffff";
+    
+    // Show sun hero, hide moon hero
+    moonHero.style.display = "none";
+    sunHero.style.display = "flex";
+
+    // Preserve the sticky-top class while changing the navbar theme
+    navbar.classList.remove("navbar-light");
+    navbar.classList.add("navbar-dark");
+    navbar.style.backgroundColor = "#000000";
+    
+    // Explicitly set all nav links to white
+    navLinks.forEach(link => {
+      link.style.color = "#ffffff";
+    });
+    
+    brand.style.color = "#ffffff";
+
+    // Cart icons color
+    document.querySelectorAll("#cartIconMobile i, #cartIconDesktop i").forEach(icon => {
+      icon.style.color = "#ffffff";
+    });
+
+    // Set shopping cart styles
+    sideCart.style.backgroundColor = "#fff";
+    sideCart.style.color = "#000";
+    document.querySelector(".cart-header").style.borderBottom = "1px solid #eee";
+    document.querySelector(".cart-footer").style.backgroundColor = "#fff";
+    document.querySelector(".cart-footer").style.borderTop = "1px solid #eee";
+    
+    document.querySelectorAll(".cart-product").forEach(item => {
+      item.style.borderBottom = "1px solid #eee";
+    });
+
+    if (productModal) {
+      productModal.style.backgroundColor = "#fff";
+      productModal.style.color = "#333";
+      document.querySelector(".close-modal").style.color = "#333";
+      document.querySelector(".product-modal-description").style.color = "#666";
+    }
+
+    logo.src = "Dark_Logo.png";
+    themeButtons.forEach(btn => {
+      btn.classList.remove("btn-outline-dark");
+      btn.classList.add("btn-outline-light");
+    });
+    themeIcons.forEach(icon => icon.className = "bi bi-moon-stars");
+  }
+  
+  renderProducts(dark ? 'light' : 'dark');
+};
+
+const lightThemeProducts = [
+  { 
+    name: 'O - TYPE STAR', 
+    description: 'Unapologetically powerful, O-Type Star ignites with metallic saffron, blazing citrus, and white pepper. Its core is molten: leather, solar florals, and smoky incense. The drydown of mineral amber, labdanum, and jet-black woods burns long into the night. This is a fragrance of rare brilliance — intense, rare, unforgettable.', 
+    price: 500,
+    image: 'O-type.png'
+  },
+  { 
+    name: 'G - TYPE STAR', 
+    description: 'G-Type Star radiates gentle warmth and familiar beauty. Opening with honeyed mandarin and sun-warmed neroli, it flows into a golden heart of heliotrope, mimosa, and soft spices. Anchored by amber, musk, and clean cedarwood, its a scent of comfort, clarity, and everyday wonder.', 
+    price: 500,
+    image: 'G-type.png'
+  },
+  { 
+    name: 'M - TYPE STAR', 
+    description: 'M-Type Star is intimate and hypnotic. It begins with fig, plum, and star anise, moves through a core of dusky rose, patchouli, and cacao, and settles into a lingering base of earthy musk, red cedar, and tonka bean. Rich, slow-burning, and deeply grounding — a scent for the eternal night.', 
+    price: 500,
+    image: 'M-type.png'
+  }
+];
+
+const darkThemeProducts = [
+  { 
+    name: 'NEW MOON', 
+    description: 'Shrouded in darkness, New Moon is the scent of introspection and new possibilities. Soft blackcurrant and violet leaf open the veil, revealing a heart of black tea, iris root, and dark rose. Anchored by smooth vetiver and smoked vanilla, it whispers rather than shouts — an elegant, enigmatic signature.', 
+    price: 500,
+    image: 'New_Moon.png'
+  },
+  { 
+    name: 'FULL MOON', 
+    description: 'Bathed in celestial light, Full Moon captures the moment when energy peaks and emotions rise. Bright top notes of bergamot and frozen pear melt into a glowing heart of jasmine, iris, and silver musk. A sensual base of amber, sandalwood, and lunar resin leaves a magnetic trail. Daring, luminous, unforgettable.', 
+    price: 500,
+    image: 'Full_Moon.png'
+  },
+  { 
+    name: 'WANING CRESCENT', 
+    description: 'Waning Crescent is a soft, dreamlike composition that lingers like the final notes of a lullaby. It opens with gentle neroli and chamomile, blooms into a heart of white lavender and pale jasmine, and settles into a base of skin musk, creamy sandalwood, and night-toned cashmere. Subtle, soothing, and deeply intimate.', 
+    price: 500,
+    image: 'Waning_Crescent.png'
+  }
+];
+
+let cart = [];
+
+
+const toggleCart = () => {
+  document.getElementById("sideCart").classList.toggle("active");
+  document.getElementById("cartOverlay").classList.toggle("active");
+  document.body.style.overflow = document.getElementById("sideCart").classList.contains("active") ? "hidden" : "";
+};
+
+
+const renderProducts = (theme) => {
+  const products = theme === 'light' ? lightThemeProducts : darkThemeProducts;
+  const productCardsDiv = document.getElementById('productCards');
+  productCardsDiv.innerHTML = '';
+
+  products.forEach((product, index) => {
+    const productCard = document.createElement('div');
+    productCard.classList.add('col-md-4', 'mb-4');
+    productCard.innerHTML = `
+      <div class="product-card h-100">
+        <img src="${product.image}" alt="${product.name}" class="product-image">
+        <div class="product-actions">
+          <div class="action-icon cart-icon" data-product="${product.name}" 
+            data-price="${product.price}" data-image="${product.image}">
+            <i class="bi bi-cart"></i>
+          </div>
+          <div class="action-icon quick-view-icon" data-index="${index}">
+            <i class="bi bi-eye"></i>
+          </div>
+        </div>
+        <h5 class="product-title">${product.name}</h5>
+        <div class="product-price">₱${product.price.toFixed(2)}</div>
+      </div>
+    `;
+    productCardsDiv.appendChild(productCard);
+  });
+
+
+  document.querySelectorAll('.cart-icon').forEach(button => {
+    button.addEventListener('click', e => {
+      e.stopPropagation();
+      const name = e.currentTarget.getAttribute('data-product');
+      const price = parseFloat(e.currentTarget.getAttribute('data-price'));
+      const image = e.currentTarget.getAttribute('data-image');
+
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({ name, price, quantity: 1, image });
+      }
+
+      updateCartCount();
+      updateCartItems();
+      persistCart();
+      
+
+      showAddedToCartMessage(name);
+    });
+  });
+
+
+  document.querySelectorAll('.quick-view-icon').forEach(button => {
+    button.addEventListener('click', e => {
+      e.stopPropagation();
+      const index = parseInt(e.currentTarget.getAttribute('data-index'));
+      openQuickViewModal(products[index]);
+    });
+  });
+
+
+  document.querySelectorAll('.product-image').forEach((img, index) => {
+    img.addEventListener('click', e => {
+      openQuickViewModal(products[index]);
+    });
+  });
+};
+
+
+const updateCartCount = () => {
+  const count = cart.reduce((total, item) => total + item.quantity, 0);
+  document.querySelectorAll(".cart-count").forEach(el => {
+    el.textContent = count;
+  });
+};
+
+
+const updateCartItems = () => {
+  const cartItemsDiv = document.getElementById("cartItems");
+  cartItemsDiv.innerHTML = "";
+  let total = 0;
+
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = '<p class="text-center py-4">Your cart is empty</p>';
+  } else {
+    cart.forEach((item, index) => {
+      const itemTotal = item.quantity * item.price;
+      total += itemTotal;
+
+      cartItemsDiv.innerHTML += `
+        <div class="cart-product">
+          <img src="${item.image}" alt="${item.name}" class="cart-product-image">
+          <div class="cart-product-details">
+            <h6>${item.name}</h6>
+            <p>₱${item.price.toFixed(2)}</p>
+            <div class="cart-quantity">
+              <div class="qty-btn" onclick="updateQuantity(${index}, -1)">-</div>
+              <input type="text" class="qty-input" value="${item.quantity}" readonly>
+              <div class="qty-btn" onclick="updateQuantity(${index}, 1)">+</div>
+              <button class="btn btn-sm btn-outline-danger ms-3" onclick="removeItem(${index})">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById("cartTotal").textContent = total.toFixed(2);
+};
+
+const persistCart = () => {
+  localStorage.setItem("cart", JSON.stringify(cart));
+};
+
+
+function updateQuantity(index, change) {
+  cart[index].quantity += change;
+  if (cart[index].quantity <= 0) {
+    removeItem(index);
+  } else {
+    updateCartCount();
+    updateCartItems();
+    persistCart();
+  }
+}
+
+
+function removeItem(index) {
+  cart.splice(index, 1);
+  updateCartCount();
+  updateCartItems();
+  persistCart();
+}
+
+
+function openQuickViewModal(product) {
+
+  let modal = document.getElementById('productModal');
+  if (!modal) {
+    createQuickViewModal();
+    modal = document.getElementById('productModal');
+  }
+
+  document.getElementById('modalProductImage').src = product.image;
+  document.getElementById('modalProductTitle').textContent = product.name;
+  document.getElementById('modalProductPrice').textContent = `₱${product.price.toFixed(2)}`;
+  document.getElementById('modalProductDescription').textContent = product.description;
+  document.getElementById('modalQuantity').value = 1;
+  
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  
+
+  if (document.body.classList.contains('dark-mode')) {
+    document.querySelector('.product-modal-content').style.backgroundColor = '#333';
+    document.querySelector('.product-modal-content').style.color = '#f4f4f4';
+    document.querySelector('.close-modal').style.color = '#f4f4f4';
+    document.querySelector('.product-modal-description').style.color = '#ccc';
+  } else {
+    document.querySelector('.product-modal-content').style.backgroundColor = '#fff';
+    document.querySelector('.product-modal-content').style.color = '#333';
+    document.querySelector('.close-modal').style.color = '#333';
+    document.querySelector('.product-modal-description').style.color = '#666';
+  }
+  
+
+  document.getElementById('modalAddToCartBtn').onclick = function() {
+    const quantity = parseInt(document.getElementById('modalQuantity').value);
+    
+    const existing = cart.find(item => item.name === product.name);
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      cart.push({ 
+        name: product.name, 
+        price: product.price, 
+        quantity: quantity, 
+        image: product.image 
+      });
+    }
+    
+    updateCartCount();
+    updateCartItems();
+    persistCart();
+    
+    closeQuickViewModal();
+    showAddedToCartMessage(product.name);
+  };
+}
+
+function closeQuickViewModal() {
+  const modal = document.getElementById('productModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+function updateModalQuantity(change) {
+  const input = document.getElementById('modalQuantity');
+  if (input) {
+    let quantity = parseInt(input.value) + change;
+    if (quantity < 1) quantity = 1;
+    input.value = quantity;
+  }
+}
+
+
+function createQuickViewModal() {
+  const modalHTML = `
+    <div id="productModal" class="product-modal">
+      <div class="product-modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="product-modal-body">
+          <div class="product-modal-image">
+            <img id="modalProductImage" src="" alt="Product Image">
+          </div>
+          <div class="product-modal-details">
+            <h2 id="modalProductTitle" class="product-modal-title"></h2>
+            <div id="modalProductPrice" class="product-modal-price"></div>
+            <p id="modalProductDescription" class="product-modal-description"></p>
+            
+            <div class="product-quantity">
+              <div class="qty-btn" onclick="updateModalQuantity(-1)">-</div>
+              <input type="text" id="modalQuantity" class="qty-input" value="1" readonly>
+              <div class="qty-btn" onclick="updateModalQuantity(1)">+</div>
+            </div>
+            
+            <button id="modalAddToCartBtn" class="btn btn-dark w-100">ADD TO CART</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  const div = document.createElement('div');
+  div.innerHTML = modalHTML;
+  document.body.appendChild(div.firstChild);
+  
+
+  document.querySelector('.close-modal').addEventListener('click', closeQuickViewModal);
+  
+
+  const modal = document.getElementById('productModal');
+  modal.addEventListener('click', function(event) {
+    if (event.target === modal) {
+      closeQuickViewModal();
+    }
+  });
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  createQuickViewModal();
+  
+  const moonHero = document.querySelector(".moon-hero");
+  const sunHero = document.querySelector(".sun-hero");
+  
+  if (document.body.classList.contains("dark-mode")) {
+    moonHero.style.display = "flex";
+    sunHero.style.display = "none";
+  } else {
+    moonHero.style.display = "none";
+    sunHero.style.display = "flex";
+  }
+  applyProductDisplayStyle();
+  
+
+  const isDarkMode = document.body.classList.contains("dark-mode");
+  document.querySelectorAll("#cartIconMobile i, #cartIconDesktop i").forEach(icon => {
+  icon.style.color = isDarkMode ? "#000000" : "#ffffff";
+	});
+  renderProducts(isDarkMode ? 'dark' : 'light');
+  
+
+  document.getElementById("toggleThemeBtn").addEventListener("click", toggleTheme);
+  document.getElementById("toggleThemeBtnDesktop").addEventListener("click", toggleTheme);
+
+  if (localStorage.getItem("cart")) {
+    cart = JSON.parse(localStorage.getItem("cart"));
+    updateCartCount();
+    updateCartItems();
+  }
+  
+
+  document.getElementById("cartIconMobile").addEventListener("click", function(e) {
+    e.preventDefault();
+    toggleCart();
+  });
+  
+  document.getElementById("cartIconDesktop").addEventListener("click", function(e) {
+    e.preventDefault();
+    toggleCart();
+  });
+  
+  document.getElementById("closeCart").addEventListener("click", toggleCart);
+  document.getElementById("cartOverlay").addEventListener("click", toggleCart);
+});
+  </script>
+</body>
+</html>
